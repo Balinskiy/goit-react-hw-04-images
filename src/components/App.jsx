@@ -17,21 +17,22 @@ const App = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getImages();
-  }, [search]);
+    if (!search) return;
 
-  const getImages = async () => {
-    setLoading(true);
-    try {
-      const searchResult = await ImageService.getImages(search, page);
-      setImages(prev => [...prev, ...searchResult.hits]);
-      setLoadMore(prev => Math.ceil(searchResult.totalHits / 12));
-    } catch (error) {
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const getImages = async () => {
+      setLoading(true);
+      try {
+        const searchResult = await ImageService.getImages(search, page);
+        setImages(prev => [...prev, ...searchResult.hits]);
+        setLoadMore(prev => Math.ceil(searchResult.totalHits / 12));
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getImages();
+  }, [page, search]);
 
   const searchImages = search => {
     setSearch(search);
@@ -54,6 +55,7 @@ const App = () => {
   return (
     <>
       <Appdiv>
+        {error && <p>Error: {error.message}</p>}
         <Searchbar onSubmit={searchImages} />
         {loading && <Loader />}
 
