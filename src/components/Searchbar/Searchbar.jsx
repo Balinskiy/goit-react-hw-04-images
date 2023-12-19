@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {
   Boxheader,
   SearchbarButton,
@@ -6,40 +6,36 @@ import {
   SearchbarInput,
 } from './Searchbar.styled';
 
-export class Searchbar extends Component {
-  state = {
-    search: '',
+const Searchbar = ({ onSubmit }) => {
+  const [search, setSearch] = useState('');
+
+  const onHandleChange = evt => {
+    setSearch(evt.target.value);
   };
 
-  onHandleChange = evt => {
-    this.setState({ search: evt.target.value });
-  };
-
-  onHandleSubmit = evt => {
+  const onHandleSubmit = evt => {
     evt.preventDefault();
-    this.props.onSubmit(this.state.search);
+    onSubmit(search);
   };
 
-  render() {
-    return (
-      <Boxheader>
-        <SearchbarContainer onSubmit={this.onHandleSubmit}>
-          <SearchbarButton type="submit">
-            <span>Search</span>
-          </SearchbarButton>
+  return (
+    <Boxheader>
+      <SearchbarContainer onSubmit={onHandleSubmit}>
+        <SearchbarButton type="submit">
+          <span>Search</span>
+        </SearchbarButton>
 
-          <SearchbarInput
-            className="input"
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            onChange={this.onHandleChange}
-          />
-        </SearchbarContainer>
-      </Boxheader>
-    );
-  }
-}
+        <SearchbarInput
+          className="input"
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          onChange={onHandleChange}
+        />
+      </SearchbarContainer>
+    </Boxheader>
+  );
+};
 
 export default Searchbar;
